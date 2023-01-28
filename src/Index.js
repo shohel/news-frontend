@@ -1,0 +1,13 @@
+import React from "react";
+import ReactDOM from 'react-dom/client';
+import '../assets/css/tailwindbase.scss';
+import AppRoutes from "./core/AppRoutes";
+import {
+    RouterProvider,
+} from "react-router-dom";
+
+ReactDOM.createRoot(document.getElementById("newsRoot")).render(
+    <React.StrictMode>
+        <RouterProvider router={AppRoutes} />
+    </React.StrictMode>
+);

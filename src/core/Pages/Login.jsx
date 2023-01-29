@@ -13,7 +13,7 @@ const Login = () => {
         formData.append('email', submittedData.email);
         formData.append('password', submittedData.password);
 
-        const saveConnectionRequest = remotePost(
+        remotePost(
             siteData.apiBaseURL+'login',
             formData
         ).then(function (response) {

@@ -1,65 +1,43 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Header from "../Elements/Header";
-
-
-const posts = [
-    {
-        title: 'Boost your conversion rate',
-        href: '#',
-        category: { name: 'Article', href: '#' },
-        description:
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto accusantium praesentium eius, ut atque fuga culpa, similique sequi cum eos quis dolorum.',
-        date: 'Mar 16, 2020',
-        datetime: '2020-03-16',
-        imageUrl:
-            'https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80',
-        readingTime: '6 min',
-        author: {
-            name: 'Roel Aufderehar',
-            href: '#',
-            imageUrl:
-                'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-    },
-    {
-        title: 'How to use search engine optimization to drive sales',
-        href: '#',
-        category: { name: 'Video', href: '#' },
-        description:
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit facilis asperiores porro quaerat doloribus, eveniet dolore. Adipisci tempora aut inventore optio animi., tempore temporibus quo laudantium.',
-        date: 'Mar 10, 2020',
-        datetime: '2020-03-10',
-        imageUrl:
-            'https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80',
-        readingTime: '4 min',
-        author: {
-            name: 'Brenna Goyette',
-            href: '#',
-            imageUrl:
-                'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-    },
-    {
-        title: 'Improve your customer experience',
-        href: '#',
-        category: { name: 'Case Study', href: '#' },
-        description:
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint harum rerum voluptatem quo recusandae magni placeat saepe molestiae, sed excepturi cumque corporis perferendis hic.',
-        date: 'Feb 12, 2020',
-        datetime: '2020-02-12',
-        imageUrl:
-            'https://images.unsplash.com/photo-1492724441997-5dc865305da7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80',
-        readingTime: '11 min',
-        author: {
-            name: 'Daniela Metz',
-            href: '#',
-            imageUrl:
-                'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-    },
-]
+import {remoteGet, remotePost} from "../RemoteRequest";
+import {currentUser} from "../HelperFunctions";
 
 const Home = () => {
+    const [articles, setArticles] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(true);
+    const loggedUser = currentUser();
+
+    useEffect(() => {
+        remoteGet(
+            siteData.apiBaseURL+`getArticles?page=${page}`,
+            {'Authorization': `Bearer ${loggedUser?.token}`},
+        ).then(function (response) {
+            if (response.status) {
+                if ( response.results.data?.length ) {
+                    setArticles(articles.concat(response.results.data));
+                } else {
+                    setHasMore(false);
+                }
+            }
+        });
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+
+    }, [page]);
+
+    function handleScroll() {
+        if ( ! hasMore ) return;
+
+        if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
+        setPage(page + 1);
+    }
+
+    const placeholderImage = 'https://via.placeholder.com/1280x720.png?text=No+preview+is+available';
+
     return(
         <>
 
@@ -77,41 +55,29 @@ const Home = () => {
                         </p>
                     </div>
                     <div className="mx-auto mt-12 grid max-w-lg gap-5 lg:max-w-none lg:grid-cols-3">
-                        {posts.map((post) => (
-                            <div key={post.title} className="flex flex-col overflow-hidden rounded-lg shadow-lg">
+                        {articles.map((article) => (
+                            <div key={article.id} className="flex flex-col overflow-hidden rounded-lg shadow-lg">
                                 <div className="flex-shrink-0">
-                                    <img className="h-48 w-full object-cover" src={post.imageUrl} alt="" />
+                                    <img className="h-48 w-full object-cover" src={article.url_to_image ? article.url_to_image : placeholderImage } alt="" />
                                 </div>
                                 <div className="flex flex-1 flex-col justify-between bg-white p-6">
                                     <div className="flex-1">
                                         <p className="text-sm font-medium text-indigo-600">
-                                            <a href={post.category.href} className="hover:underline">
-                                                {post.category.name}
+                                            <a href={article.source?.id} className="hover:underline">
+                                                {article.source.source}
                                             </a>
                                         </p>
-                                        <a href={post.href} className="mt-2 block">
-                                            <p className="text-xl font-semibold text-gray-900">{post.title}</p>
-                                            <p className="mt-3 text-base text-gray-500">{post.description}</p>
+                                        <a href={article.url} className="mt-2 block" target="_blank">
+                                            <p className="text-xl font-semibold text-gray-900">{article.title}</p>
+                                            <p className="mt-3 text-base text-gray-500">{article.description}</p>
                                         </a>
                                     </div>
-                                    <div className="mt-6 flex items-center">
-                                        <div className="flex-shrink-0">
-                                            <a href={post.author.href}>
-                                                <span className="sr-only">{post.author.name}</span>
-                                                <img className="h-10 w-10 rounded-full" src={post.author.imageUrl} alt="" />
-                                            </a>
-                                        </div>
-                                        <div className="ml-3">
-                                            <p className="text-sm font-medium text-gray-900">
-                                                <a href={post.author.href} className="hover:underline">
-                                                    {post.author.name}
-                                                </a>
-                                            </p>
-                                            <div className="flex space-x-1 text-sm text-gray-500">
-                                                <time dateTime={post.datetime}>{post.date}</time>
-                                                <span aria-hidden="true">&middot;</span>
-                                                <span>{post.readingTime} read</span>
-                                            </div>
+                                    <div className="mt-6">
+                                        <p className="text-sm font-medium text-gray-900">
+                                            {article.raw_author}
+                                        </p>
+                                        <div className="flex space-x-1 text-sm text-gray-500">
+                                            <time dateTime={article.published_at}>{article.published_at}</time>
                                         </div>
                                     </div>
                                 </div>

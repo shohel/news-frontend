@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import Header from "../Elements/Header";
 import {remoteGet, remotePost} from "../RemoteRequest";
 import {currentUser} from "../HelperFunctions";
+import LoadingItem from "../Elements/LoadingItem";
 
 const Home = () => {
     const [articles, setArticles] = useState([]);
@@ -11,10 +12,13 @@ const Home = () => {
     const loggedUser = currentUser();
 
     useEffect(() => {
+        setLoading(true);
         remoteGet(
             siteData.apiBaseURL+`getArticles?page=${page}`,
             {'Authorization': `Bearer ${loggedUser?.token}`},
         ).then(function (response) {
+            setLoading(false);
+
             if (response.status) {
                 if ( response.results.data?.length ) {
                     setArticles(articles.concat(response.results.data));
@@ -83,6 +87,9 @@ const Home = () => {
                                 </div>
                             </div>
                         ))}
+
+                        {loading && <LoadingItem />}
+
                     </div>
 
                 </div>

@@ -74,10 +74,13 @@ const Home = () => {
                                         </div>
                                         <div className="flex flex-1 flex-col justify-between bg-white p-6">
                                             <div className="flex-1">
-                                                <p className="text-sm font-medium text-indigo-600">
-                                                    <a href={article.source?.id} className="hover:underline">
-                                                        {article.source.source}
-                                                    </a>
+                                                <p className="text-sm font-medium">
+                                                    <span className="text-gray-500">{article.apiSource} | </span>
+                                                    {article.source?.id &&
+                                                        <a href={article.url} className="text-indigo-600 hover:underline" target="_blank">
+                                                            {article.source.source}
+                                                        </a>
+                                                    }
                                                 </p>
                                                 <a href={article.url} className="mt-2 block" target="_blank">
                                                     <p className="text-xl font-semibold text-gray-900">{article.title}</p>

@@ -2,6 +2,7 @@ import React from "react";
 import Home from "./Pages/Home";
 import ErrorPage from "./Elements/ErrorPage";
 import Login from "./Pages/Login";
+import Register from "./Pages/Register";
 
 import {
     createBrowserRouter,
@@ -17,6 +18,10 @@ const AppRoutes = createBrowserRouter([
     {
         path: "login",
         element: <Login />,
+    },
+    {
+        path: "register",
+        element: <Register />,
     },
 ]);
 

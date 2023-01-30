@@ -19,8 +19,6 @@ const Home = () => {
             siteData.apiBaseURL+`getArticles?page=${page}`,
             {'Authorization': `Bearer ${loggedUser?.token}`},
         ).then(function (response) {
-            setLoading(false);
-
             if (response.status) {
                 if ( response.results.data?.length ) {
                     setArticles(articles.concat(response.results.data));
@@ -28,6 +26,8 @@ const Home = () => {
                     setHasMore(false);
                 }
             }
+
+            setLoading(false);
         });
 
         window.addEventListener('scroll', handleScroll);

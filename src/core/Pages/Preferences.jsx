@@ -1,6 +1,44 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Header from "../Elements/Header";
+import {remoteGet, remotePost} from "../RemoteRequest";
+import {currentUser} from "../HelperFunctions";
+import {useForm} from "react-hook-form";
+import Skeleton from "react-loading-skeleton";
 const Preferences = () => {
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const [loading, setLoading] = useState(true);
+    const [authors, setAuthors] = useState([]);
+    const [sources, setSources] = useState([]);
+    const loggedUser = currentUser();
+
+    useEffect(() => {
+        setLoading(true);
+        remoteGet(
+            siteData.apiBaseURL+`preferences`,
+            {'Authorization': `Bearer ${loggedUser?.token}`},
+        ).then(function (response) {
+            if (response.status) {
+                setAuthors(response.results.authors);
+                setSources(response.results.sources);
+            }
+
+            setLoading(false);
+        });
+
+    }, []);
+
+    const onSubmit = (submittedData) => {
+        remotePost(
+            siteData.apiBaseURL+'preferences',
+            JSON.stringify(submittedData),
+            {'Authorization': `Bearer ${loggedUser?.token}`, 'Content-Type': 'application/json'}
+        ).then(function (response) {
+            if (response.status) {
+                console.log(response);
+            }
+        });
+    }
+
     return (
 
         <>
@@ -10,16 +48,16 @@ const Preferences = () => {
             <div className="mx-auto max-w-5xl px-2 sm:px-6 lg:px-8">
 
 
-
-
                 <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
                     <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Preferences</h2>
-                    <p className="mt-1 mb-6 text-center text-sm text-gray-500">
+                    <p className="mt-1 mb-8 text-center text-sm text-gray-500">
                         Adjust settings to personalize your experience on this platform.
                     </p>
 
+                    <hr />
 
-                    <form className="space-y-8 divide-y divide-gray-200">
+                    <form className="space-y-8 divide-y divide-gray-200" method="post" onSubmit={handleSubmit(onSubmit)}>
+
                         <div className="space-y-8 divide-y divide-gray-200">
 
                             <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
@@ -29,34 +67,45 @@ const Preferences = () => {
 
                                     <div className="pt-8">
                                         <div>
-                                            <h3 className="text-lg font-medium leading-6 text-gray-900">Notifications</h3>
+                                            <h3 className="text-lg font-medium leading-6 text-gray-900">Authors</h3>
                                             <p className="mt-1 text-sm text-gray-500">
-                                                We'll always let you know about important changes, but you pick what else you want to hear about.
+                                                I would like to read news only from the authors listed below.
                                             </p>
                                         </div>
                                         <div className="mt-6">
                                             <fieldset>
-                                                <legend className="sr-only">By Email</legend>
-                                                <div className="text-base font-medium text-gray-900" aria-hidden="true">
-                                                    By Email
-                                                </div>
-                                                <div className="mt-4 space-y-4">
-                                                    <div className="relative flex items-start">
-                                                        <div className="flex h-5 items-center">
-                                                            <input
-                                                                id="comments"
-                                                                name="comments"
-                                                                type="checkbox"
-                                                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                                            />
-                                                        </div>
-                                                        <div className="ml-3 text-sm">
-                                                            <label htmlFor="comments" className="font-medium text-gray-700">
-                                                                Comments
-                                                            </label>
-                                                            <p className="text-gray-500">Get notified when someones posts a comment on a posting.</p>
-                                                        </div>
+                                                {!loading &&
+                                                    <div className="text-base text-gray-500" aria-hidden="true">
+                                                        {`${authors.length} authors`}
                                                     </div>
+                                                }
+
+                                                <div className="mt-4 space-y-4">
+                                                    {loading &&
+                                                        <Skeleton count={10} />
+                                                    }
+
+                                                    {authors.map((author) => {
+                                                        return(
+                                                            <div key={author.author_slug} className="relative flex items-start">
+                                                                <div className="flex h-5 items-center">
+                                                                    <input
+                                                                        id={`author_check_${author.id}`}
+                                                                        type="checkbox"
+                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                                                        value={author.id}
+                                                                        {...register("authors")}
+                                                                    />
+                                                                </div>
+                                                                <div className="ml-3 text-sm">
+                                                                    <label htmlFor={`author_check_${author.id}`} className="font-medium text-gray-700">
+                                                                        {author.author_name}
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    })}
+
 
                                                 </div>
                                             </fieldset>
@@ -69,34 +118,45 @@ const Preferences = () => {
 
                                     <div className="pt-8">
                                         <div>
-                                            <h3 className="text-lg font-medium leading-6 text-gray-900">Notifications</h3>
+                                            <h3 className="text-lg font-medium leading-6 text-gray-900">Sources</h3>
                                             <p className="mt-1 text-sm text-gray-500">
-                                                We'll always let you know about important changes, but you pick what else you want to hear about.
+                                                Show me news only from the sources listed below.
                                             </p>
                                         </div>
                                         <div className="mt-6">
                                             <fieldset>
-                                                <legend className="sr-only">By Email</legend>
-                                                <div className="text-base font-medium text-gray-900" aria-hidden="true">
-                                                    By Email
-                                                </div>
-                                                <div className="mt-4 space-y-4">
-                                                    <div className="relative flex items-start">
-                                                        <div className="flex h-5 items-center">
-                                                            <input
-                                                                id="comments"
-                                                                name="comments"
-                                                                type="checkbox"
-                                                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                                            />
-                                                        </div>
-                                                        <div className="ml-3 text-sm">
-                                                            <label htmlFor="comments" className="font-medium text-gray-700">
-                                                                Comments
-                                                            </label>
-                                                            <p className="text-gray-500">Get notified when someones posts a comment on a posting.</p>
-                                                        </div>
+                                                {!loading &&
+                                                    <div className="text-base text-gray-500" aria-hidden="true">
+                                                        {`${sources.length} sources`}
                                                     </div>
+                                                }
+                                                <div className="mt-4 space-y-4">
+
+                                                    {loading &&
+                                                        <Skeleton count={10} />
+                                                    }
+
+                                                    {sources.map((source) => {
+                                                        return(
+                                                            <div key={source.source_slug} className="relative flex items-start">
+                                                                <div className="flex h-5 items-center">
+                                                                    <input
+                                                                        id={`source_check_${source.id}`}
+                                                                        type="checkbox"
+                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                                                        value={source.id}
+                                                                        {...register("sources")}
+                                                                    />
+                                                                </div>
+                                                                <div className="ml-3 text-sm">
+                                                                    <label htmlFor={`source_check_${source.id}`} className="font-medium text-gray-700">
+                                                                        {source.source}
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    })}
+
 
                                                 </div>
                                             </fieldset>
@@ -115,12 +175,6 @@ const Preferences = () => {
 
                         <div className="pt-5">
                             <div className="flex justify-end">
-                                <button
-                                    type="button"
-                                    className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                >
-                                    Cancel
-                                </button>
                                 <button
                                     type="submit"
                                     className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

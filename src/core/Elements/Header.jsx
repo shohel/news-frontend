@@ -60,21 +60,13 @@ const Header = () => {
                                         Home
                                     </Link>
 
-                                    {/*
-                                    <a
-                                        href="#"
-                                        className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                                    >
-                                        Calendar
-                                    </a>*/}
-
                                 </div>
                             </div>
                             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 
 
                                 {/* Profile dropdown */}
-                                { currentUser()?.name ?
+                                { currentUser() ?
                                 <Menu as="div" className="relative ml-3">
                                     <div>
                                         <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">

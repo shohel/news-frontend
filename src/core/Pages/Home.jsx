@@ -55,6 +55,27 @@ const Home = () => {
             </div>
 
 
+            <div>
+
+                <div>
+                    <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                        First name
+                    </label>
+                    <div className="mt-1">
+                        <input
+                            type="text"
+                            name="first-name"
+                            id="first-name"
+                            autoComplete="given-name"
+                            className="block rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        />
+                    </div>
+                </div>
+
+
+            </div>
+
+
             {articles.length ?
                 <>
 
@@ -115,6 +136,12 @@ const Home = () => {
                             <Link to={'/'} className="text-base font-medium text-indigo-700 hover:text-indigo-600">
                                 Reload to see new articles <span aria-hidden="true"> &rarr;</span>
                             </Link>
+
+                            { currentUser() &&
+                                <p className="mt-4 text-sm text-gray-500">
+                                    You can also try by resetting your <Link to={'preferences'} className="text-indigo-700" >preference</Link>
+                                </p>
+                            }
 
                         </div>
                     }

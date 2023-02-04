@@ -12,6 +12,7 @@ const Preferences = () => {
     const [loading, setLoading] = useState(true);
     const [authors, setAuthors] = useState([]);
     const [sources, setSources] = useState([]);
+    const [preference, setPreference] = useState({});
     const loggedUser = currentUser();
 
     useEffect(() => {
@@ -23,6 +24,7 @@ const Preferences = () => {
             if (response.status) {
                 setAuthors(response.results.authors);
                 setSources(response.results.sources);
+                setPreference(JSON.parse(response.results.preference));
             }
 
             setLoading(false);
@@ -30,16 +32,27 @@ const Preferences = () => {
 
     }, []);
 
+    /**
+     * Convert array number as string to number
+     */
+    if (Array.isArray(preference?.authors) && preference?.authors?.length ) {
+        preference.authors = preference.authors.map(val => Number(val));
+    } else {
+        preference.authors = [];
+    }
+
+    if ( Array.isArray(preference?.sources) && preference?.sources?.length ) {
+        preference.sources = preference.sources.map(val => Number(val));
+    } else {
+        preference.sources = [];
+    }
+
     const onSubmit = (submittedData) => {
         const savePreference = remotePost(
             siteData.apiBaseURL+'preferences',
             JSON.stringify(submittedData),
             {'Authorization': `Bearer ${loggedUser?.token}`, 'Content-Type': 'application/json'}
-        ).then(function (response) {
-            if (response.status) {
-                console.log(response);
-            }
-        });
+        );
 
         toast.promise(savePreference, {
             pending: `Saving...`,
@@ -100,6 +113,7 @@ const Preferences = () => {
                                                                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                                                         value={author.id}
                                                                         {...register("authors")}
+                                                                        defaultChecked={preference?.authors?.includes(author.id)}
                                                                     />
                                                                 </div>
                                                                 <div className="ml-3 text-sm">
@@ -151,6 +165,7 @@ const Preferences = () => {
                                                                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                                                         value={source.id}
                                                                         {...register("sources")}
+                                                                        defaultChecked={preference?.sources?.includes(source.id)}
                                                                     />
                                                                 </div>
                                                                 <div className="ml-3 text-sm">

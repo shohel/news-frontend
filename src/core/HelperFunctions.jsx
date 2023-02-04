@@ -1,3 +1,8 @@
 export const currentUser = () => {
-    return JSON.parse(localStorage.getItem('currentUser'));
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if ( user?.name ) {
+        return user;
+    }
+
+    return false;
 }

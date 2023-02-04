@@ -4,6 +4,9 @@ import {remoteGet, remotePost} from "../RemoteRequest";
 import {currentUser} from "../HelperFunctions";
 import {useForm} from "react-hook-form";
 import Skeleton from "react-loading-skeleton";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 const Preferences = () => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(true);
@@ -28,7 +31,7 @@ const Preferences = () => {
     }, []);
 
     const onSubmit = (submittedData) => {
-        remotePost(
+        const savePreference = remotePost(
             siteData.apiBaseURL+'preferences',
             JSON.stringify(submittedData),
             {'Authorization': `Bearer ${loggedUser?.token}`, 'Content-Type': 'application/json'}
@@ -36,6 +39,12 @@ const Preferences = () => {
             if (response.status) {
                 console.log(response);
             }
+        });
+
+        toast.promise(savePreference, {
+            pending: `Saving...`,
+            success: `Preferences has been saved`,
+            error: `Something went wrong, please try again`,
         });
     }
 
@@ -190,9 +199,9 @@ const Preferences = () => {
                 </div>
 
 
-
-
             </div>
+
+            <ToastContainer />
         </>
     )
 }

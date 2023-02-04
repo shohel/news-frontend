@@ -7,8 +7,12 @@ import Preferences from "./Pages/Preferences";
 
 import {
     createBrowserRouter,
+    BrowserRouter,
+    Routes,
+    Route
 } from "react-router-dom";
 
+/*
 
 const AppRoutes = createBrowserRouter([
     {
@@ -29,5 +33,17 @@ const AppRoutes = createBrowserRouter([
         element: <Preferences />,
     },
 ]);
+*/
+
+const AppRoutes = () => {
+    return(
+        <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/preferences" element={<Preferences />} />
+        </Routes>
+    )
+}
 
 export default AppRoutes;

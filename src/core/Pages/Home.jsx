@@ -14,6 +14,18 @@ const Home = () => {
     const loggedUser = currentUser();
 
     useEffect(() => {
+        remoteGet(
+            siteData.apiBaseURL+`filterableFields`,
+            {'Authorization': `Bearer ${loggedUser?.token}`},
+        ).then(function (response) {
+            if (response.status) {
+                console.log(response);
+            }
+        });
+
+    }, []);
+
+    useEffect(() => {
         setLoading(true);
         remoteGet(
             siteData.apiBaseURL+`getArticles?page=${page}`,

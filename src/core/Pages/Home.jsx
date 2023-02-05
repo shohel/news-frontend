@@ -5,6 +5,7 @@ import {currentUser} from "../HelperFunctions";
 import LoadingItem from "../Elements/LoadingItem";
 import {Link} from "react-router-dom";
 import {CheckCircleIcon} from "@heroicons/react/24/outline";
+import {AsyncPaginate} from "react-select-async-paginate";
 
 const Home = () => {
     const [articles, setArticles] = useState([]);
@@ -12,7 +13,10 @@ const Home = () => {
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(true);
     const loggedUser = currentUser();
+    const [authors, setAuthors] = useState([]);
+    const [sources, setSources] = useState([]);
 
+    /*
     useEffect(() => {
         remoteGet(
             siteData.apiBaseURL+`filterableFields`,
@@ -24,11 +28,15 @@ const Home = () => {
         });
 
     }, []);
-
+*/
     useEffect(() => {
         setLoading(true);
+
+        const authorIds = authors.map( (item) => item.value );
+        const sourceIds = sources.map( (item) => item.value );
+
         remoteGet(
-            siteData.apiBaseURL+`getArticles?page=${page}`,
+            siteData.apiBaseURL+`getArticles?page=${page}&authors=${authorIds}&sources=${sourceIds}`,
             {'Authorization': `Bearer ${loggedUser?.token}`},
         ).then(function (response) {
             if (response.status) {
@@ -45,7 +53,7 @@ const Home = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
 
-    }, [page]);
+    }, [page, authors, sources]);
 
     function handleScroll() {
         if ( ! hasMore ) return;
@@ -56,6 +64,59 @@ const Home = () => {
 
     const placeholderImage = 'https://via.placeholder.com/1280x720.png?text=No+preview+is+available';
 
+    async function authorLoadOptions(search, loadedOptions, { page }) {
+        const responseJSON = await remoteGet(
+            siteData.apiBaseURL+`getAuthors?search=${search}&page=${page}`,
+            {'Authorization': `Bearer ${loggedUser?.token}`},
+        );
+
+        const options = [];
+        responseJSON?.results?.data?.map( resultItem => {
+            options.push({ value: resultItem.id, label: resultItem.author_name })
+        } );
+
+        return {
+            options: options,
+            hasMore: ! (responseJSON?.results?.data?.length < responseJSON?.results?.per_page),
+            additional: {
+                page: page + 1,
+            },
+        };
+    }
+
+    async function sourceLoadOptions(search, loadedOptions, { page }) {
+        const responseJSON = await remoteGet(
+            siteData.apiBaseURL+`getSources?search=${search}&page=${page}`,
+            {'Authorization': `Bearer ${loggedUser?.token}`},
+        );
+
+        const options = [];
+        responseJSON?.results?.data?.map( resultItem => {
+            options.push({ value: resultItem.id, label: resultItem.source })
+        } );
+
+        return {
+            options: options,
+            hasMore: ! (responseJSON?.results?.data?.length < responseJSON?.results?.per_page),
+            additional: {
+                page: page + 1,
+            },
+        };
+    }
+
+    const onChangeFilter = (values, type) => {
+        setPage(1);
+        setArticles([]);
+
+        if ( 'authors' === type ) {
+            setAuthors(values)
+        }
+
+        if ( 'sources' === type ) {
+            setSources(values)
+        }
+    }
+    
     return(
         <div className="px-6 pt-16 pb-20 lg:px-8 lg:pt-24 lg:pb-28">
 
@@ -83,6 +144,46 @@ const Home = () => {
                         />
                     </div>
                 </div>
+
+
+                <div>
+                    <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                        Authors
+                    </label>
+                    <div className="mt-1">
+                        <AsyncPaginate
+                            value={authors}
+                            loadOptions={authorLoadOptions}
+                            onChange={(selectedValue) => {
+                                onChangeFilter(selectedValue, 'authors');
+                            }}
+                            additional={{
+                                page: 1,
+                            }}
+                            isMulti={true}
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                        Source
+                    </label>
+                    <div className="mt-1">
+                        <AsyncPaginate
+                            value={sources}
+                            loadOptions={sourceLoadOptions}
+                            onChange={(selectedValue) => {
+                                onChangeFilter(selectedValue, 'sources');
+                            }}
+                            additional={{
+                                page: 1,
+                            }}
+                            isMulti={true}
+                        />
+                    </div>
+                </div>
+
 
 
             </div>

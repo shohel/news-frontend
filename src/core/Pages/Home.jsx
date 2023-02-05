@@ -43,7 +43,7 @@ const Home = () => {
             {'Authorization': `Bearer ${loggedUser?.token}`},
         ).then(function (response) {
             if (response.status) {
-                setTotalNews(response.total_results);
+                setTotalNews(response.results?.total);
                 if ( response.results.data?.length ) {
                     setArticles(articles.concat(response.results.data));
                 } else {

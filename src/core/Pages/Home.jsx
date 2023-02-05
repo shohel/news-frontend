@@ -13,8 +13,11 @@ const Home = () => {
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(true);
     const loggedUser = currentUser();
+    const [searchTerm, setSearchTerm] = useState('');
     const [authors, setAuthors] = useState([]);
     const [sources, setSources] = useState([]);
+    const [totalNews, setTotalNews] = useState(0);
+
 
     /*
     useEffect(() => {
@@ -36,10 +39,11 @@ const Home = () => {
         const sourceIds = sources.map( (item) => item.value );
 
         remoteGet(
-            siteData.apiBaseURL+`getArticles?page=${page}&authors=${authorIds}&sources=${sourceIds}`,
+            siteData.apiBaseURL+`getArticles?page=${page}&search=${searchTerm}&authors=${authorIds}&sources=${sourceIds}`,
             {'Authorization': `Bearer ${loggedUser?.token}`},
         ).then(function (response) {
             if (response.status) {
+                setTotalNews(response.total_results);
                 if ( response.results.data?.length ) {
                     setArticles(articles.concat(response.results.data));
                 } else {
@@ -53,12 +57,17 @@ const Home = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
 
-    }, [page, authors, sources]);
+    }, [page, searchTerm, authors, sources]);
 
     function handleScroll() {
         if ( ! hasMore ) return;
 
-        if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
+        let currentPosition = window.innerHeight + document.documentElement.scrollTop;
+        if ( currentPosition % 1 === 0.5 ) {
+            currentPosition += 0.5;
+        }
+
+        if (currentPosition !== document.documentElement.offsetHeight) return;
         setPage(page + 1);
     }
 
@@ -104,17 +113,73 @@ const Home = () => {
         };
     }
 
-    const onChangeFilter = (values, type) => {
+    const onChangeFilter = (value, type) => {
+        /**
+         * Reset query first.
+         */
+        setHasMore(true);
         setPage(1);
         setArticles([]);
 
-        if ( 'authors' === type ) {
-            setAuthors(values)
+        switch ( type ) {
+            case 'search':
+                setSearchTerm(value);
+                break;
+            case 'authors':
+                setAuthors(value)
+                break;
+            case 'sources':
+                setSources(value)
+                break;
+        }
+    }
+
+    const customStyles = {
+        control: (provided, state) => {
+            return (
+                {
+                    ...provided,
+                    '&:hover': {
+                        border: state.isFocused ? '1px solid #2563eb' : '1px solid rgb(209 213 219/1)'
+                    },
+                    background: '#fff',
+                    borderColor: 'rgb(209 213 219/1)',
+                    boxShadow: state.isFocused ? null : null,
+                    padding: '0.60rem 1rem',
+                }
+            )
+        },
+
+        valueContainer: (provided, state) => ({
+            ...provided,
+            padding: '0 6px'
+        }),
+
+        input: (provided, state) => ({
+            ...provided,
+            margin: '0px',
+            'input:focus': {
+                boxShadow: 'none',
+            },
+        }),
+        indicatorSeparator: state => ({
+            display: 'none',
+        }),
+        indicatorsContainer: (provided, state) => ({
+            ...provided,
+            height: '30px',
+        }),
+    };
+
+    let searchDelay = null;
+    const searchNewsHandler = (e) => {
+        if (searchDelay) {
+            clearTimeout(searchDelay);
         }
 
-        if ( 'sources' === type ) {
-            setSources(values)
-        }
+        searchDelay = setTimeout(() => {
+            onChangeFilter(e.target.value, 'search');
+        }, 1000);
     }
     
     return(
@@ -128,27 +193,25 @@ const Home = () => {
             </div>
 
 
-            <div>
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 sm:gap-x-8">
 
                 <div>
                     <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
-                        First name
+                        Search News
                     </label>
                     <div className="mt-1">
                         <input
                             type="text"
-                            name="first-name"
-                            id="first-name"
-                            autoComplete="given-name"
-                            className="block rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            placeholder={'Search news...'}
+                            onChange={searchNewsHandler}
                         />
                     </div>
                 </div>
 
-
                 <div>
                     <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
-                        Authors
+                        Filter by Authors
                     </label>
                     <div className="mt-1">
                         <AsyncPaginate
@@ -161,13 +224,15 @@ const Home = () => {
                                 page: 1,
                             }}
                             isMulti={true}
+                            styles={customStyles}
+                            placeholder={<div>Select or type to search author</div>}
                         />
                     </div>
                 </div>
 
                 <div>
                     <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
-                        Source
+                        Filter by Source
                     </label>
                     <div className="mt-1">
                         <AsyncPaginate
@@ -180,14 +245,14 @@ const Home = () => {
                                 page: 1,
                             }}
                             isMulti={true}
+                            styles={customStyles}
+                            placeholder={<div>Select or type to search source</div>}
                         />
                     </div>
                 </div>
-
-
-
             </div>
 
+            <p className="mt-4 text-gray-500 text-sm"> {`Total ${totalNews} news found in this search criteria`} </p>
 
             {articles.length ?
                 <>

@@ -17,6 +17,6 @@ At this point, you should see the application.
 - Change path tho this project root from the terminal `cd /path/to/news-frontend`
 - Run command `npm install`
 - Run command `npm run build`
-- Browse the URL in root, please not you need to run it within server.
+- Browse the URL in root (`index.php`), please not you need to run it within server.
 
 At this point, you should see the application.

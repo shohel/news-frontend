@@ -7726,7 +7726,7 @@ const dist_isBrowser = typeof window !== "undefined" && typeof window.document !
  * The public API for rendering a history-aware <a>.
  */
 
-const dist_Link = /*#__PURE__*/react.forwardRef(function LinkWithRef(_ref4, ref) {
+const Link = /*#__PURE__*/react.forwardRef(function LinkWithRef(_ref4, ref) {
   let {
     onClick,
     relative,
@@ -7849,7 +7849,7 @@ const NavLink = /*#__PURE__*/(/* unused pure expression or super */ null && (Rea
     isActive,
     isPending
   }) : styleProp;
-  return /*#__PURE__*/React.createElement(dist_Link, react_router_dom_dist_extends({}, rest, {
+  return /*#__PURE__*/React.createElement(Link, react_router_dom_dist_extends({}, rest, {
     "aria-current": ariaCurrent,
     className: className,
     ref: ref,
@@ -8501,23 +8501,23 @@ var remotePost = /*#__PURE__*/function () {
     return regenerator_default().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          url = _args.length > 0 && _args[0] !== undefined ? _args[0] : "";
+          url = _args.length > 0 && _args[0] !== undefined ? _args[0] : '';
           formData = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
           headers = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
           _context.next = 5;
           return fetch(url, {
-            method: "POST",
+            method: 'POST',
             // *GET, POST, PUT, DELETE, etc.
-            mode: "cors",
+            mode: 'cors',
             // no-cors, *cors, same-origin
-            cache: "no-cache",
+            cache: 'no-cache',
             // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: "same-origin",
+            credentials: 'same-origin',
             // include, *same-origin, omit
             headers: RemoteRequest_objectSpread({}, headers),
-            redirect: "follow",
+            redirect: 'follow',
             // manual, *follow, error
-            referrerPolicy: "no-referrer",
+            referrerPolicy: 'no-referrer',
             // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
             body: formData // body data type must match "Content-Type" header
           });
@@ -8544,23 +8544,23 @@ var remoteGet = /*#__PURE__*/function () {
     return regenerator_default().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          url = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : "";
+          url = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : '';
           headers = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
           init = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
           _context2.next = 5;
           return fetch(url, RemoteRequest_objectSpread(RemoteRequest_objectSpread({}, init), {}, {
-            method: "GET",
+            method: 'GET',
             // *GET, POST, PUT, DELETE, etc.
-            mode: "cors",
+            mode: 'cors',
             // no-cors, *cors, same-origin
-            cache: "no-cache",
+            cache: 'no-cache',
             // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: "same-origin",
+            credentials: 'same-origin',
             // include, *same-origin, omit
             headers: RemoteRequest_objectSpread({}, headers),
-            redirect: "follow",
+            redirect: 'follow',
             // manual, *follow, error
-            referrerPolicy: "no-referrer" // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            referrerPolicy: 'no-referrer' // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
           }));
         case 5:
           response = _context2.sent;
@@ -8584,22 +8584,22 @@ var remoteDelete = /*#__PURE__*/(/* unused pure expression or super */ null && (
     return _regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
-          url = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : "";
+          url = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : '';
           headers = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
           _context3.next = 4;
           return fetch(url, {
-            method: "DELETE",
+            method: 'DELETE',
             // *GET, POST, PUT, DELETE, etc.
-            mode: "cors",
+            mode: 'cors',
             // no-cors, *cors, same-origin
-            cache: "no-cache",
+            cache: 'no-cache',
             // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: "same-origin",
+            credentials: 'same-origin',
             // include, *same-origin, omit
             headers: RemoteRequest_objectSpread({}, headers),
-            redirect: "follow",
+            redirect: 'follow',
             // manual, *follow, error
-            referrerPolicy: "no-referrer" // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            referrerPolicy: 'no-referrer' // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
           });
         case 4:
           response = _context3.sent;
@@ -8673,7 +8673,7 @@ var Header = function Header() {
       className: "font-bold text-xl text-gray-600"
     }, "News")), /*#__PURE__*/react.createElement("div", {
       className: "hidden sm:ml-6 sm:flex sm:space-x-8"
-    }, /*#__PURE__*/react.createElement(dist_Link, {
+    }, /*#__PURE__*/react.createElement(Link, {
       to: "/",
       className: "".concat(currentSlug ? 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' : 'border-indigo-500 text-gray-900', " inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium")
     }, "Home"))), /*#__PURE__*/react.createElement("div", {
@@ -8710,7 +8710,7 @@ var Header = function Header() {
       }, "Your Profile");
     }), /*#__PURE__*/react.createElement(Ze.Item, null, function (_ref3) {
       var active = _ref3.active;
-      return /*#__PURE__*/react.createElement(dist_Link, {
+      return /*#__PURE__*/react.createElement(Link, {
         to: "/preferences",
         className: classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')
       }, "Preferences");
@@ -8721,10 +8721,10 @@ var Header = function Header() {
         className: classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700'),
         onClick: onClickSignOut
       }, "Sign out");
-    })))) : /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(dist_Link, {
+    })))) : /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(Link, {
       to: "/login",
       className: "rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none"
-    }, "Login"), /*#__PURE__*/react.createElement(dist_Link, {
+    }, "Login"), /*#__PURE__*/react.createElement(Link, {
       to: "/register",
       className: "rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none"
     }, "Register"))))), /*#__PURE__*/react.createElement(ke.Panel, {
@@ -16548,46 +16548,19 @@ var Home = function Home() {
     "aria-hidden": "true"
   }), /*#__PURE__*/react.createElement("p", {
     className: "mt-1 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl mb-4"
-  }, "No articles available at this moment"), /*#__PURE__*/react.createElement(dist_Link, {
+  }, "No articles available at this moment"), /*#__PURE__*/react.createElement(Link, {
     to: '/',
     className: "text-base font-medium text-indigo-700 hover:text-indigo-600"
   }, "Reload to see new articles ", /*#__PURE__*/react.createElement("span", {
     "aria-hidden": "true"
   }, " \u2192")), currentUser() && /*#__PURE__*/react.createElement("p", {
     className: "mt-4 text-sm text-gray-500"
-  }, "You can also try by resetting your ", /*#__PURE__*/react.createElement(dist_Link, {
+  }, "You can also try by resetting your ", /*#__PURE__*/react.createElement(Link, {
     to: 'preferences',
     className: "text-indigo-700"
   }, "preference")))));
 };
 /* harmony default export */ const Pages_Home = (Home);
-;// CONCATENATED MODULE: ./src/core/Elements/ErrorPage.jsx
-
-
-function ErrorPage() {
-  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "min-h-full bg-white py-16 px-6 sm:py-24 md:grid md:place-items-center lg:px-8"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "mx-auto max-w-max"
-  }, /*#__PURE__*/React.createElement("main", {
-    className: "sm:flex"
-  }, /*#__PURE__*/React.createElement("p", {
-    className: "text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl"
-  }, "404"), /*#__PURE__*/React.createElement("div", {
-    className: "sm:ml-6"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "sm:border-l sm:border-gray-200 sm:pl-6"
-  }, /*#__PURE__*/React.createElement("h1", {
-    className: "text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl"
-  }, "Page not found"), /*#__PURE__*/React.createElement("p", {
-    className: "mt-1 text-base text-gray-500"
-  }, "Please check the URL in the address bar and try again.")), /*#__PURE__*/React.createElement("div", {
-    className: "mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6"
-  }, /*#__PURE__*/React.createElement(Link, {
-    to: "/",
-    className: "inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-  }, "Go back home")))))));
-}
 ;// CONCATENATED MODULE: ./node_modules/react-hook-form/dist/index.esm.mjs
 
 
@@ -19298,31 +19271,6 @@ var Preferences = function Preferences() {
 
 
 
-
-
-/*
-
-const AppRoutes = createBrowserRouter([
-    {
-        path: "/",
-        element: <Home />,
-        errorElement: <ErrorPage />,
-    },
-    {
-        path: "login",
-        element: <Login />,
-    },
-    {
-        path: "register",
-        element: <Register />,
-    },
-    {
-        path: "preferences",
-        element: <Preferences />,
-    },
-]);
-*/
-
 var AppRoutes = function AppRoutes() {
   return /*#__PURE__*/react.createElement(Routes, null, /*#__PURE__*/react.createElement(Route, {
     exact: true,
@@ -19353,14 +19301,14 @@ var App = function App() {
   }, /*#__PURE__*/react.createElement(core_AppRoutes, null)));
 };
 /* harmony default export */ const core_App = (App);
-;// CONCATENATED MODULE: ./src/index.js
+;// CONCATENATED MODULE: ./src/index.jsx
 
 
 
 
 
 document.addEventListener('DOMContentLoaded', function () {
-  client.createRoot(document.getElementById("newsRoot")).render( /*#__PURE__*/react.createElement(core_App, null));
+  client.createRoot(document.getElementById('newsRoot')).render( /*#__PURE__*/react.createElement(core_App, null));
 });
 })();
 

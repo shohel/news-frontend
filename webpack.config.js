@@ -9,7 +9,7 @@ module.exports = {
         ignored: /node_modules/,
     },
     mode: env_mode,
-    entry: './src/index.js',
+    entry: './src/index.jsx',
     optimization: {
         minimize: false
     },

@@ -2,7 +2,7 @@ module.exports = {
 	plugins: ["prettier"],
 	extends: [
 		"eslint:recommended",
-		'plugin:react/recommended',
+		//'plugin:react/recommended',
 		"plugin:node/recommended",
 		"plugin:prettier/recommended",
 		"prettier"
